@@ -1,115 +1,33 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-  creationTimestamp: "2021-06-24T08:23:12Z"
-  generation: 1
-  managedFields:
-  - apiVersion: apps/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        f:progressDeadlineSeconds: {}
-        f:replicas: {}
-        f:revisionHistoryLimit: {}
-        f:selector: {}
-        f:strategy:
-          f:rollingUpdate:
-            .: {}
-            f:maxSurge: {}
-            f:maxUnavailable: {}
-          f:type: {}
-        f:template:
-          f:metadata:
-            f:labels:
-              .: {}
-              f:workload.user.cattle.io/workloadselector: {}
-          f:spec:
-            f:affinity: {}
-            f:containers:
-              k:{"name":"container-0"}:
-                .: {}
-                f:image: {}
-                f:imagePullPolicy: {}
-                f:name: {}
-                f:resources: {}
-                f:terminationMessagePath: {}
-                f:terminationMessagePolicy: {}
-            f:dnsPolicy: {}
-            f:restartPolicy: {}
-            f:schedulerName: {}
-            f:securityContext: {}
-            f:terminationGracePeriodSeconds: {}
-    manager: rancher
-    operation: Update
-    time: "2021-06-24T08:23:12Z"
-  - apiVersion: apps/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .: {}
-          f:deployment.kubernetes.io/revision: {}
-      f:status:
-        f:availableReplicas: {}
-        f:conditions:
-          .: {}
-          k:{"type":"Available"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:lastUpdateTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-          k:{"type":"Progressing"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:lastUpdateTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-        f:observedGeneration: {}
-        f:readyReplicas: {}
-        f:replicas: {}
-        f:updatedReplicas: {}
-    manager: k3s
-    operation: Update
-    time: "2021-06-24T08:23:23Z"
-  name: nginx-test-deployment2
+  name: nginx-deployment
   namespace: fleet-local
-  resourceVersion: "504957"
-  uid: 870f693c-ee46-40b7-9f5c-a4e03940822c
 spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 10
+  # A deployment's specification really only 
+  # has a few useful options
+  
+  # 1. How many copies of each pod do we want?
+  replicas: 3
+
+  # 2. How do want to update the pods?
+  strategy: Recreate
+
+  # 3. Which pods are managed by this deployment?
   selector:
+    # This must match the labels we set on the pod!
     matchLabels:
-      workload.user.cattle.io/workloadselector: apps.deployment-fleet-local-nginx-test-deployment2
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      deploy: example
+  
+  # This template field is a regular pod configuration 
+  # nested inside the deployment spec
   template:
     metadata:
-      creationTimestamp: null
+      # Set labels on the pod.
+      # This is used in the deployment selector.
       labels:
-        workload.user.cattle.io/workloadselector: apps.deployment-fleet-local-nginx-test-deployment2
+        deploy: example
     spec:
-      affinity: {}
       containers:
-      - image: nginx:latest
-        imagePullPolicy: Always
-        name: container-0
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
+        - name: nginx
+          image: nginx:1.7.9
