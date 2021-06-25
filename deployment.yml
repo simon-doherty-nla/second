@@ -28,4 +28,4 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: ref-app:latest
+          image: nginx:latest
