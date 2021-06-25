@@ -1,7 +1,7 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: nginx-deployment
+  name: ref-app-deployment
   namespace: fleet-local
 spec:
   # A deployment's specification really only 
@@ -28,4 +28,4 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:latest
+          image: ref-app:latest
