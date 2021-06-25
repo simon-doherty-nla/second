@@ -28,4 +28,4 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: simonnla/ref-app:1.0
+          image: simonnla/ref-app:1.1
